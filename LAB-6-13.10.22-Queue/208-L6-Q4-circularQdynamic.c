@@ -1,3 +1,5 @@
+//CREATE CIRCULAR QUEUE USING DYNAMIC ARRAY.
+
 #include"stdio.h"
 #include"stdlib.h"
 struct queue
