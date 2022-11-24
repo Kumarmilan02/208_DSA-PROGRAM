@@ -18,13 +18,13 @@ int main()
     printf("\nDISPLAY BEFORE QUICK SORT: ");
     for(i=0;i<n;i++)
     {
-        printf("%d ",x[i]);
+        printf("%d\t",x[i]);
     }
     quick_sort(x,0,n-1);
-    printf("\nDISPLAY AFTER QUICK SORT: ");
+    printf("\n\nDISPLAY AFTER QUICK SORT: ");
     for(i=0;i<n;i++)
     {
-        printf("%d ",x[i]);
+        printf("%d\t",x[i]);
     }
 }
 void quick_sort(int x[],int low,int up)
@@ -37,32 +37,36 @@ void quick_sort(int x[],int low,int up)
         quick_sort(x,p+1,up);
     }
 }
-int position(int x[],int low,int up)
+int position(int x[],int left,int right)
 {
-    int left=low,right=up,p,temp;
-    while(left<right)
+    int i=left,j=right,p,temp;
+    p=(i+j)/2;
+    if(i<j)
     {
-        p=(left+right)/2;
-        while(x[p]>x[left])
-                left++;
-        if(x[p]<x[left])
+        if(x[p]<x[i])
         {
-            temp=x[left];
-            x[left]=x[p];
+            temp=x[i];
+            x[i]=x[p];
             x[p]=temp;
-            p=left; 
+            p=i; 
         }
-        while (x[p]<x[right])
+        else
+        while(x[p]> x[i] )
+                i++;
+        if(x[p]>x[j])
         {
-            right--;
-        }
-        if(x[p]>x[right])
-        {
-            temp=x[left];
-            x[left]=x[p];
+            temp=x[j];
+            x[j]=x[p];
             x[p]=temp;
-            p=right;
+            p=j;
         }
+        else
+        while (x[p]<x[j])
+        {
+            j--;
+        }
+        quick_sort(x,left,p);
+        quick_sort(x,p+1,right);
     }
     return p;
 }

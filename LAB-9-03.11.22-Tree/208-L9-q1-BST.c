@@ -9,6 +9,10 @@ struct node
     int data;
     struct node *right;
 };
+int leafcount=0;
+int nodecount=0;
+int nonleafcount;
+int sum=0;
 int preorder(struct node *root) // NLR
 {
     if (root != 0)
@@ -39,55 +43,55 @@ int postorder(struct node *root) // LRN
 int levelorder(struct node *root)
 {
     struct node *q[100];
-    int size=0;
-    int qptr=0;
-    while(root)
+    int size = 0;
+    int qptr = 0;
+    while (root)
     {
-        printf("%d ",root->data);
-        if(root->left)
+        printf("%d ", root->data);
+        if (root->left)
         {
-            q[size++]=root->left;
+            q[size++] = root->left;
         }
-        if(root->right)
+        if (root->right)
         {
-            q[size++]=root->right;
+            q[size++] = root->right;
         }
-        root=q[qptr++];
+        root = q[qptr++];
     }
 }
-int printGivenLevel(struct node *root,int level,int ltr)
+int printGivenLevel(struct node *root, int level, int ltr)
 {
-    if(root==NULL)
+    if (root == NULL)
         return;
-    if(level == 1)
-        printf("%d ",root->data);
-    else if(level > 1)
+    if (level == 1)
+        printf("%d ", root->data);
+    else if (level > 1)
     {
-        if(ltr)
+        if (ltr)
         {
-            printGivenLevel(root->left,level-1,ltr);
-            printGivenLevel(root->right,level-1,ltr);
+            printGivenLevel(root->left, level - 1, ltr);
+            printGivenLevel(root->right, level - 1, ltr);
         }
         else
         {
-            printGivenLevel(root->right,level-1,ltr);
-            printGivenLevel(root->left,level-1,ltr);
+            printGivenLevel(root->right, level - 1, ltr);
+            printGivenLevel(root->left, level - 1, ltr);
         }
     }
 }
 int spiralorder(struct node *root)
 {
-    int h=height(root);
-    int i,ltr=0; //ltr used to change printing order of levels.
-    for(i=1;i<=h;i++)
+    int h = height(root);
+    int i, ltr = 0; // ltr used to change printing order of levels.
+    for (i = 1; i <= h; i++)
     {
-        printGivenLevel(root,i,ltr);
-        ltr!=ltr;
+        printGivenLevel(root, i, ltr);
+        ltr != ltr;
     }
 }
 int height(struct node *root) // FIND HEIGHT OF BST
 {
-    int lh,rh;
+    int lh, rh;
     if (root == 0)
         return 0;
     else
@@ -96,21 +100,21 @@ int height(struct node *root) // FIND HEIGHT OF BST
         rh = height(root->right);
     }
     if (lh > rh)
-        return (lh+1);
+        return (lh + 1);
     else
-        return (rh+1);
+        return (rh + 1);
 }
 int countnode(struct node *root)
 {
-    if(root==0)
+    if (root == 0)
         return (0);
-    else
+    if (root->left == 0 && root->right == 0)
     {
-        if(root->left ==0 && root->right ==0)
-            return(1);
-        else
-            return(1+(countnode(root->left)+countnode(root->right)));
+            leafcount++;
+            return (1);
     }
+    else
+        return (1 + (countnode(root->left) + countnode(root->right)));
 }
 struct node *minimumT(struct node *root)
 {
@@ -162,7 +166,7 @@ void display(struct node *root, int level)
         printf("\n");
         for (i = 0; i < level; i++)
             printf("  ");
-        printf("%d", root->data);
+        printf("%d ", root->data);
         display(root->left, level + 1);
     }
 }
@@ -188,7 +192,7 @@ struct node *search(struct node *root, int key) // SEARCHING OPERATION IN BST
         return NULL;
     }
     if (key == root->data)
-    {   
+    {
         return root;
     }
     if (key < root->data)
@@ -254,6 +258,47 @@ struct node *delete (struct node *root, int n) // DELETE OPERATION IN BST
     }
     return root;
 }
+struct node *lca(struct node *root, int node_1, int node_2)
+{
+    if (root != NULL)
+    {
+        if (root->data > node_1 && root->data > node_2)
+        {
+            return lca(root->left, node_1, node_2);
+        }
+        if (root->data < node_1 && root->data < node_2)
+        {
+            return lca(root->right, node_1, node_2);
+        }
+        return root;
+    }
+}
+int calculateSum(struct node *root)
+{
+    int sum, sumLeft, sumRight;
+    sum = sumRight = sumLeft = 0;
+
+    // Check whether tree is empty
+    if (root == NULL)
+    {
+        printf("Tree is empty\n");
+        return 0;
+    }
+    else
+    {
+        // Calculate the sum of nodes present in left subtree
+        if (root->left != NULL)
+            sumLeft = calculateSum(root->left);
+
+        // Calculate the sum of nodes present in right subtree
+        if (root->right != NULL)
+            sumRight = calculateSum(root->right);
+
+        // Calculate the sum of all nodes by adding sumLeft, sumRight and root node's data
+        sum = root->data + sumLeft + sumRight;
+        return sum;
+    }
+}
 int main()
 {
     struct node *ptr = NULL, *s;
@@ -276,7 +321,7 @@ int main()
         printf("\nBINARY SEARCH TREE: ");
         printf("\n1.CREATE.");
         printf("\n2.DISPLAY");
-        printf("\n3.HEIGHT");
+        printf("\n3.HEIGHT/DEPTH");
         printf("\n4.PREORDER.");
         printf("\n5.INORDER.");
         printf("\n6.POSTORDER");
@@ -287,6 +332,10 @@ int main()
         printf("\n11.COUNT NODE");
         printf("\n12.LEVELORDER");
         printf("\n13.SPIRALORDER");
+        printf("\n14.LCA IN BST");
+        printf("\n15.SUM OF ALL NODES");
+        printf("\n16.PRINT NODES AT KTH LEVEL");
+        printf("\n17.NODES AT MAXIMUM DEPTH");
         printf("\n0.EXIT");
         printf("\nEnter Choice: ");
         scanf("%d", &ch);
@@ -328,7 +377,7 @@ int main()
             printf("\nEnter data to delete: ");
             scanf("%d", &a);
             ptr = delete (ptr, a);
-            display(ptr,0);
+            display(ptr, 0);
             printf("\n\nINORDER: ");
             inorder(ptr);
             printf("\n");
@@ -356,7 +405,9 @@ int main()
             printf("\n");
             break;
         case 11:
-            printf("\nTOTAL NODE: %d",countnode(ptr));
+            printf("\nTOTAL NODE: %d", countnode(ptr));
+            printf("\nTOTAL LEAF NODE: %d",leafcount);
+            //printf("\nTOTAL NON LEAF NODE: %d",(nodes-leafcount));
             printf("\n");
             break;
         case 12:
@@ -368,6 +419,24 @@ int main()
             printf("\nSPIRALORDER: ");
             spiralorder(ptr);
             printf("\n");
+            break;
+        case 14:
+            int node_1, node_2;
+            printf("ENTER TWO NODES FROM BST: ");
+            scanf("%d%d", &node_1, &node_2);
+            struct node *t = lca(ptr, node_1, node_2);
+            printf("LCA of %d and %d is %d \n", node_1, node_2, t->data);
+            break;
+        case 15:
+            printf("\nSum of all nodes of binary tree: %d", calculateSum(ptr));
+            break;
+        case 16:
+            int k;
+            printf("\n Enter Level: ");
+            scanf("%d",&k);
+            printGivenLevel(ptr,0,k);
+            break;
+        case 17:
             break;
         default:
             printf("\ninvalid choice.\n");
