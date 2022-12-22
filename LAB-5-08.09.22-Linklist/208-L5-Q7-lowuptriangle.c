@@ -16,7 +16,7 @@ int  main()
             b[i][j]=a[i][j];
         }
     }
-    printf("\n Matrix is: \n");
+    printf("\n Matrix is: \n");//display
     for (i=0;i<r;++i)
     {
         for(j=0;j<c;++j)
